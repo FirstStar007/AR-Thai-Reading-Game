@@ -147,6 +147,12 @@
             ฝึกอ่านคำภาษาไทยไปพร้อมกับเวทมนตร์ AR!<br>
             <span class="text-sm md:text-base text-gray-500 font-normal">(ระบบต้องการสิทธิ์เข้าถึง <b>กล้อง</b> และ <b>ไมโครโฟน</b>)</span>
         </p>
+
+        <!-- ย้ายช่องกรอกชื่อมาไว้หน้าแรกตรงนี้ -->
+        <div class="mb-8 w-full max-w-sm px-4">
+            <input type="text" id="playerNameInput" placeholder="พิมพ์ชื่อของหนูที่นี่..." class="w-full px-6 py-4 rounded-full border-4 border-pink-300 text-2xl text-center focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-200 shadow-sm transition-all text-gray-700 font-bold" maxlength="30">
+        </div>
+
         <button id="btnStart" class="btn-bubbly px-12 py-5 bg-gradient-to-r from-pink-400 to-orange-400 text-white text-3xl font-bold rounded-full shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border-4 border-white">
             เริ่มเล่นเกมเลย!
         </button>
@@ -163,7 +169,7 @@
             <div class="absolute inset-0 bg-yellow-300 blur-2xl opacity-50 rounded-full"></div>
             <div class="text-9xl font-black text-transparent bg-clip-text bg-gradient-to-br from-pink-500 via-red-500 to-orange-500 relative z-10" id="finalScoreText">0/10</div>
         </div>
-        <p id="endMessage" class="text-3xl text-gray-700 mb-10 font-medium text-center px-4">ยอดเยี่ยมมาก!</p>
+        <p id="endMessage" class="text-3xl text-gray-700 mb-6 font-medium text-center px-4">ยอดเยี่ยมมาก!</p>
         
         <div id="saveScoreContainer" class="flex flex-col items-center mb-6">
             <button id="btnSaveScore" class="btn-bubbly px-8 py-3 bg-gradient-to-r from-blue-400 to-indigo-400 text-white text-xl font-bold rounded-full shadow-lg border-2 border-white mb-2 flex items-center gap-2">
@@ -173,7 +179,7 @@
             <p id="saveStatusMsg" class="text-sm font-medium text-gray-500 h-5"></p>
         </div>
 
-        <button id="btnRestart" class="btn-bubbly px-10 py-4 bg-gradient-to-r from-green-400 to-teal-400 text-white text-2xl font-bold rounded-full shadow-lg border-4 border-white">
+        <button id="btnRestart" class="btn-bubbly px-10 py-4 bg-gradient-to-r from-green-400 to-teal-400 text-white text-2xl font-bold rounded-full shadow-lg border-4 border-white mt-2">
             เล่นใหม่อีกครั้ง 🔄
         </button>
     </div>
@@ -255,8 +261,8 @@
             <canvas id="outputCanvas" class="viewport-cover absolute inset-0"></canvas>
             
             <!-- กรอบคำแนะนำกล้อง -->
-            <div id="cameraGuide" class="absolute inset-0 pointer-events-none flex items-center justify-center border-8 border-dashed border-white/20 m-8 rounded-3xl opacity-50">
-                <span class="text-white/50 text-xl font-bold bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm">จัดใบหน้าให้อยู่ตรงกลาง</span>
+            <div id="cameraGuide" class="absolute inset-0 pointer-events-none flex items-center justify-center border-8 border-dashed border-white/20 m-8 rounded-3xl opacity-50 transition-opacity duration-500">
+                <span class="text-white/80 text-xl font-bold bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm">จัดใบหน้าให้อยู่ตรงกลาง</span>
             </div>
 
             <!-- ขอบมืดแสดงตอนตอบผิด -->
@@ -288,6 +294,10 @@
             { word: "มะม่วง", spell: "มะ - มอ - อัว - งอ - ม่วง" }, { word: "ชมพู่", spell: "ชอ - โอะ - มอ - ชม - พอ - อู - พู่" },
             { word: "ฝรั่ง", spell: "ฝอ - รอ - อะ - งอ - ฝรั่ง" }, { word: "องุ่น", spell: "ออ - งอ - อุ - นอ - องุ่น" },
             { word: "มะละกอ", spell: "มะ - ละ - กอ" }, { word: "ลำไย", spell: "ลอ - อำ - ลำ - ยอ - ไอ - ไย" },
+            // ของใช้นักเรียน
+            { word: "สมุด", spell: "สะ - หมุด" }, { word: "ยางลบ", spell: "ยาง - ลบ" }, { word: "ดินสอ", spell: "ดิน - สอ" },
+            { word: "ไม้บรรทัด", spell: "ไม้ - บรร - ทัด" }, { word: "โต๊ะ", spell: "โต๊ะ" }, { word: "เก้าอี้", spell: "เก้า - อี้" },
+            { word: "กระเป๋า", spell: "กระ - เป๋า" }, { word: "ปากกา", spell: "ปาก - กา" }, { word: "สี", spell: "สอ - อี - สี" }, { word: "กรรไกร", spell: "กัน - ไกร" },
             // คำพื้นฐาน
             { word: "วิ่ง", spell: "วอ - อิ - งอ - วิ่ง" }, { word: "เล่น", spell: "ลอ - เอ - นอ - เล่น" },
             { word: "กิน", spell: "กอ - อิ - นอ - กิน" }, { word: "นอน", spell: "นอ - ออ - นอ - นอน" },
@@ -303,8 +313,8 @@
         let arState = 'NONE'; // 'NONE', 'CROWN', 'HORNS'
         let countdownInterval;
         let listeningTimeout;
-        let recognitionActive = false; // Flag to prevent multiple start calls
-
+        let recognitionActive = false;
+        let currentPlayerName = ""; // เพิ่มตัวแปรเก็บชื่อ
         /**
          * 2. Web Audio API Synthesizer
          */
@@ -375,13 +385,13 @@
 
             recognition.onstart = () => { 
                 recognitionActive = true; 
-                // ย้ายการจับเวลามาไว้ที่นี่ จะเริ่มนับ 5 วินาทีก็ต่อเมื่อไมค์เปิดสำเร็จแล้ว
+                // เริ่มจับเวลา 5 วินาที หลังจากไมค์เริ่มทำงานจริงๆ
                 clearTimeout(listeningTimeout);
                 listeningTimeout = setTimeout(() => {
                     if (recognitionActive) {
                         recognition.stop();
                     }
-                    handleNoSound("ไม่ได้ยินเสียงเลยจ้า");
+                    handleNoSound("หมดเวลา! ไม่ได้ยินเสียงเลยจ้า");
                 }, 5000);
             };
             
@@ -402,13 +412,10 @@
                     clearTimeout(listeningTimeout);
                     handleNoSound("กรุณาอนุญาตให้ใช้ไมโครโฟน");
                 } else if (event.error !== 'no-speech' && event.error !== 'aborted') {
-                    // Only handle serious errors, let timeout handle no-speech
                     clearTimeout(listeningTimeout);
                     handleNoSound("เกิดข้อผิดพลาดในการรับเสียง");
                 }
             };
-        } else {
-            alert("⚠️ เบราว์เซอร์ของคุณไม่รองรับระบบตรวจจับเสียง กรุณาใช้ Google Chrome หรือ Edge ล่าสุด");
         }
 
         // Logic ประเมินความเหมือน (Levenshtein based - simple)
@@ -447,11 +454,11 @@
         });
 
         faceMesh.onResults((results) => {
-            // Hide guide once face is detected consistently (optional enhancement)
+            // Hide guide once face is detected consistently
             if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
                 cameraGuide.style.opacity = '0';
             } else {
-                cameraGuide.style.opacity = '0.5';
+                cameraGuide.style.opacity = '1';
             }
 
             if(canvasElement.width !== videoElement.videoWidth && videoElement.videoWidth > 0) {
@@ -468,11 +475,9 @@
             // Draw AR Overlay
             if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0 && arState !== 'NONE') {
                 const landmarks = results.multiFaceLandmarks[0];
-                // Distance between temples roughly represents face width
                 const faceWidth = Math.abs(landmarks[234].x - landmarks[454].x) * canvasElement.width;
 
                 if (arState === 'CROWN') {
-                    // Index 10 is top of forehead
                     const forehead = landmarks[10];
                     const x = forehead.x * canvasElement.width;
                     const y = forehead.y * canvasElement.height;
@@ -481,11 +486,9 @@
                     canvasCtx.font = `${size}px Arial`;
                     canvasCtx.textAlign = "center";
                     canvasCtx.textBaseline = "bottom";
-                    // Offset slightly up
                     canvasCtx.fillText("👑", x, y + (size * 0.1)); 
                 } 
                 else if (arState === 'HORNS') {
-                    // Indices for upper sides of head roughly
                     const leftSide = landmarks[54];
                     const rightSide = landmarks[284];
                     const size = faceWidth * 0.5;
@@ -494,7 +497,6 @@
                     canvasCtx.textAlign = "center";
                     canvasCtx.textBaseline = "bottom";
                     
-                    // Add slight rotation or offset if needed, simple fillText for now
                     canvasCtx.fillText("👿", leftSide.x * canvasElement.width, leftSide.y * canvasElement.height - (size*0.2));
                     canvasCtx.fillText("👿", rightSide.x * canvasElement.width, rightSide.y * canvasElement.height - (size*0.2));
                 }
@@ -536,9 +538,19 @@
         }
 
         async function startGame() {
-            // 1. เพิ่มการแจ้งเตือน หากเบราว์เซอร์ไม่รองรับ
+            const nameInput = document.getElementById('playerNameInput');
+            currentPlayerName = nameInput.value.trim();
+            
+            // บังคับให้พิมพ์ชื่อก่อนเข้าเกม
+            if (!currentPlayerName) {
+                alert("⚠️ กรุณาพิมพ์ชื่อของหนูก่อนเริ่มเล่นเกมนะครับ/คะ");
+                nameInput.focus();
+                return;
+            }
+
+            // Check Support
             if (!recognition) {
-                alert("⚠️ ไม่สามารถเริ่มเกมได้: เบราว์เซอร์นี้ไม่รองรับระบบเสียง\n\n👉 กรุณาคัดลอกลิงก์ (Copy Link) ไปเปิดในแอป Google Chrome เท่านั้นครับ");
+                alert("⚠️ เบราว์เซอร์นี้ไม่รองรับระบบเสียง!\n\nกรุณาคัดลอกลิงก์ไปเปิดใน Google Chrome หรือ Edge เพื่อเล่นเกมครับ");
                 return;
             }
             
@@ -548,7 +560,6 @@
             elLoadingIndicator.classList.remove('hidden');
 
             try {
-                // Initialize Audio Context on user gesture
                 if (audioCtx.state === 'suspended') await audioCtx.resume();
                 
                 // Request Camera
@@ -566,8 +577,7 @@
                 playNextWord();
 
             } catch (err) {
-                // 2. ปรับการแจ้งเตือนให้บอกสาเหตุของ Error ชัดเจนขึ้น
-                alert("เกิดข้อผิดพลาดในการเปิดกล้อง: " + err.message + "\n\nระบบต้องการสิทธิ์เข้าถึงกล้องและไมค์ กรุณากดยอมรับ หรือลองใช้ Google Chrome ครับ");
+                alert("⚠️ เกิดข้อผิดพลาดในการเปิดกล้อง\n\nระบบต้องการสิทธิ์เข้าถึงกล้องและไมค์ กรุณากดยอมรับ หรือตั้งค่าอนุญาตบนเบราว์เซอร์ของคุณ");
                 console.error("Start Game Error:", err);
                 elBtnStart.disabled = false;
                 elBtnStart.classList.remove('hidden');
@@ -610,7 +620,6 @@
             elTargetWord.innerText = currentObj.word;
             elSpellWord.innerText = currentObj.spell;
             
-            // Pop effect for new word
             elTargetWord.classList.remove('scale-100');
             elTargetWord.classList.add('scale-110', 'text-pink-500');
             setTimeout(() => {
@@ -618,14 +627,12 @@
                 elTargetWord.classList.add('scale-100', 'text-gray-800');
             }, 300);
 
-            // Reset UI
             elResultMsg.style.opacity = '0';
             setMeter(0, 'bg-gray-300');
             arState = 'NONE';
             vignette.classList.add('hidden');
             updateScoreUI();
             
-            // Countdown
             let count = 3;
             setBadge(`เตรียมตัว... ${count}`, 'bg-yellow-400 text-yellow-900', 'scale-110');
             SoundEngine.tick();
@@ -651,12 +658,9 @@
                     recognition.start();
                 }
             } catch(e) {
-                console.warn("Recognition start skipped/error:", e);
-                recognitionActive = false; // รีเซ็ตสถานะเผื่อเกิดข้อผิดพลาด
+                console.warn("Recognition start skipped:", e);
+                recognitionActive = false; 
             }
-
-            // การจับเวลา 5 วินาที ถูกย้ายไปจัดการใน recognition.onstart แล้ว 
-            // เพื่อไม่ให้หมดเวลาระหว่างที่ผู้ใช้กำลังกด Allow Permission
         }
 
         function evaluateWord(spokenText) {
@@ -666,7 +670,6 @@
             elResultMsg.style.opacity = '1';
 
             if (sim >= 80) {
-                // Correct
                 score++;
                 arState = 'CROWN';
                 setMeter(sim, 'bg-gradient-to-r from-green-400 to-green-500');
@@ -679,10 +682,9 @@
                 confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#ffb3c6', '#fcf6bd', '#d0f4de'] });
 
             } else {
-                // Incorrect
                 arState = 'HORNS';
                 vignette.classList.remove('hidden');
-                setMeter(Math.max(sim, 10), 'bg-gradient-to-r from-red-400 to-red-500'); // At least show a little red
+                setMeter(Math.max(sim, 10), 'bg-gradient-to-r from-red-400 to-red-500');
                 setBadge(`ได้ยินว่า: "${spokenText}"`, 'bg-red-100 text-red-800 border border-red-300');
                 
                 elResultMsg.innerHTML = "❌ ยังไม่เป๊ะ พยายามเข้านะ";
@@ -692,7 +694,6 @@
             }
             
             updateScoreUI();
-
             setTimeout(() => {
                 currentWordIndex++;
                 playNextWord();
@@ -702,15 +703,13 @@
         function handleNoSound(msg) {
             arState = 'NONE';
             setMeter(0, 'bg-gray-300');
-            setBadge(`หมดเวลา!`, 'bg-yellow-500');
+            setBadge(`ข้าม!`, 'bg-yellow-500');
             
             elResultMsg.innerHTML = `⚠️ ${msg}`;
             elResultMsg.className = "h-10 mt-4 text-xl md:text-2xl font-bold transition-opacity duration-300 text-yellow-600";
             elResultMsg.style.opacity = '1';
             
             SoundEngine.warning();
-
-            // Retry same word
             setTimeout(() => {
                 playNextWord();
             }, 3000);
@@ -724,9 +723,11 @@
             document.getElementById('finalScoreText').innerText = `${score}/10`;
             const elMsg = document.getElementById('endMessage');
             
+            // เตรียมปุ่ม Save
             const elBtnSaveScore = document.getElementById('btnSaveScore');
             const elSaveStatusMsg = document.getElementById('saveStatusMsg');
             const elSaveSpinner = document.getElementById('saveSpinner');
+            
             elBtnSaveScore.classList.remove('hidden');
             elBtnSaveScore.disabled = false;
             elBtnSaveScore.classList.replace('from-gray-400', 'from-blue-400');
@@ -754,56 +755,56 @@
             }
         }
 
+        // --- Save Score Event ---
         document.getElementById('btnSaveScore').addEventListener('click', () => {
             SoundEngine.click();
             const btn = document.getElementById('btnSaveScore');
             const statusMsg = document.getElementById('saveStatusMsg');
             const spinner = document.getElementById('saveSpinner');
             
-            // เปลี่ยนปุ่มเป็นสถานะกำลังโหลด
             btn.disabled = true;
             spinner.classList.remove('hidden');
             statusMsg.innerText = 'กำลังบันทึกข้อมูล...';
             statusMsg.className = 'text-sm font-medium text-blue-500 h-5';
 
-            // เตรียมข้อมูลที่จะส่งไปบันทึก
             const scoreData = {
+                name: currentPlayerName,
                 score: score,
                 maxScore: 10
             };
 
-            // เรียกใช้ฟังก์ชัน recordScore ใน Code.gs ผ่าน google.script.run
-            if (typeof google !== 'undefined' && google.script && google.script.run) {
-                google.script.run
-                    .withSuccessHandler(function(response) {
-                        spinner.classList.add('hidden');
-                        if (response && response.success) {
-                            btn.classList.add('hidden'); // ซ่อนปุ่มเมื่อบันทึกสำเร็จ
-                            statusMsg.innerText = '✅ บันทึกคะแนนสำเร็จ!';
-                            statusMsg.className = 'text-sm font-bold text-green-500 h-5';
-                        } else {
-                            btn.disabled = false;
-                            statusMsg.innerText = '❌ เกิดข้อผิดพลาด: ' + (response ? response.message : 'ไม่ทราบสาเหตุ');
-                            statusMsg.className = 'text-sm font-medium text-red-500 h-5';
-                        }
-                    })
-                    .withFailureHandler(function(error) {
-                        spinner.classList.add('hidden');
-                        btn.disabled = false;
-                        statusMsg.innerText = '❌ การเชื่อมต่อผิดพลาด โปรดลองใหม่';
-                        statusMsg.className = 'text-sm font-medium text-red-500 h-5';
-                        console.error("Save Score Error:", error);
-                    })
-                    .recordScore(scoreData);
-            } else {
-                // สำหรับกรณีรันนอก Google Apps Script (เช่น ทดสอบใน Local)
-                setTimeout(() => {
-                    spinner.classList.add('hidden');
+            // URL ไปยัง Google Apps Script
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycby716SZsHT4kZXjG_p47bGrirsVOKXGVNMvzdikk4ocPpBTfJLobMxR0trMrlhRxTDqSA/exec';
+
+            // ส่งข้อมูลไปยัง Google Sheets
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: JSON.stringify(scoreData),
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8' 
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('hidden');
+                if (data && data.success) {
+                    btn.classList.add('hidden'); 
+                    statusMsg.innerText = '✅ บันทึกคะแนนสำเร็จ!';
+                    statusMsg.className = 'text-sm font-bold text-green-500 h-5';
+                    confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+                } else {
                     btn.disabled = false;
-                    statusMsg.innerText = '⚠️ ระบบบันทึกคะแนนทำงานเฉพาะบน Google Apps Script เท่านั้น';
-                    statusMsg.className = 'text-sm font-medium text-yellow-600 h-5';
-                }, 1000);
-            }
+                    statusMsg.innerText = '❌ เกิดข้อผิดพลาด: ' + (data ? data.message : 'ไม่ทราบสาเหตุ');
+                    statusMsg.className = 'text-sm font-medium text-red-500 h-5';
+                }
+            })
+            .catch(error => {
+                spinner.classList.add('hidden');
+                btn.disabled = false;
+                statusMsg.innerText = '❌ การเชื่อมต่อผิดพลาด โปรดลองใหม่';
+                statusMsg.className = 'text-sm font-medium text-red-500 h-5';
+                console.error("Save Score Error:", error);
+            });
         });
 
         // Event Listeners
